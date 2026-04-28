@@ -1,0 +1,33 @@
+{
+  "name": "projet-labyrinthe-electron",
+  "version": "1.0.0",
+  "description": "Application Desktop de Création et Résolution de Labyrinthes",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "sql.js": "^1.11.0",
+    "jsonwebtoken": "^9.0.0"
+  },
+  "build": {
+    "appId": "com.labyrinthe.electron",
+    "productName": "Labyrinthe",
+    "win": {
+      "target": "portable",
+      "sign": false
+    },
+    "files": [
+      "**/*",
+      "!node_modules/.cache"
+    ]
+  }
+}

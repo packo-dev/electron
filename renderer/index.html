@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LABYRINTHE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- SCANLINES CRT -->
+<div class="scanlines"></div>
+
+<!-- CURSEUR PERSONNALISE -->
+<div id="cursor"></div>
+
+<!-- ═══ BOOT SCREEN ═══ -->
+<div id="boot">
+  <div id="boot-content">
+    <div id="b1" class="bline"></div>
+    <div id="b2" class="bline"></div>
+    <div id="b3" class="bline"></div>
+    <div id="b4" class="bline"></div>
+    <div id="bbar-wrap" hidden><div id="bbar"></div></div>
+  </div>
+</div>
+
+<!-- ═══ PAGE LOGIN ═══ -->
+<div id="auth-page" class="page active">
+  <div class="bg-particles"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  <div class="auth-wrapper">
+    <h1 class="glitch-title" data-text="LABYRINTHE">LABYRINTHE</h1>
+    <p class="tagline">UN LABYRINTHE. UNE SORTIE. BONNE CHANCE.</p>
+
+    <div class="auth-box">
+      <div class="tabs">
+        <button class="tab active" id="tab-login">CONNEXION</button>
+        <button class="tab" id="tab-register">INSCRIPTION</button>
+      </div>
+
+      <div id="login-form" class="auth-form">
+        <div class="field-group">
+          <label>NOM D'UTILISATEUR</label>
+          <input type="text" id="login-username" placeholder="PLAYER_ONE" required>
+        </div>
+        <div class="field-group">
+          <label>MOT DE PASSE</label>
+          <input type="password" id="login-password" placeholder="••••••••" required>
+        </div>
+        <p id="login-error" class="error-msg"></p>
+        <button id="btn-login" class="btn-primary">SE CONNECTER</button>
+      </div>
+
+      <div id="register-form" class="auth-form hidden">
+        <div class="field-group">
+          <label>PSEUDO</label>
+          <input type="text" id="reg-username" placeholder="PLAYER_ONE" required>
+        </div>
+        <div class="field-group">
+          <label>EMAIL</label>
+          <input type="email" id="reg-email" placeholder="joueur@mail.com" required>
+        </div>
+        <div class="field-group">
+          <label>MOT DE PASSE</label>
+          <input type="password" id="reg-password" placeholder="••••••••" required>
+          <p class="field-hint">minimum 4 caracteres</p>
+        </div>
+        <p id="register-error" class="error-msg"></p>
+        <button id="btn-register" class="btn-primary">S'INSCRIRE</button>
+      </div>
+    </div>
+
+    <p class="version-tag">v1.0.0 — YNOV B3 2025-2026</p>
+  </div>
+</div>
+
+<!-- ═══ PAGE DASHBOARD ═══ -->
+<div id="page-dashboard" class="page hidden">
+  <header class="topbar">
+    <div class="topbar-logo">LABY<span class="logo-accent">:</span>RINTHE</div>
+    <nav class="topbar-nav">
+      <span id="user-greeting" class="nav-user"></span>
+      <button class="btn-icon" id="btn-nav-admin" onclick="goToPage('admin')" hidden>ADMIN</button>
+      <button class="btn-icon danger" id="btn-logout">QUITTER</button>
+    </nav>
+  </header>
+  <main class="dashboard-main">
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num" id="stat-total">0</div>
+        <div class="stat-lbl">MES LABYRINTHES</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-recent">0</div>
+        <div class="stat-lbl">CETTE SEMAINE</div>
+      </div>
+    </div>
+    <div class="section-header">
+      <h2 class="section-title">MES LABYRINTHES</h2>
+      <button class="btn-primary small" id="btn-new-laby">+ NOUVEAU</button>
+    </div>
+    <div id="labyrinth-list" class="lab-grid">
+      <div class="empty-state"><p>AUCUN LABYRINTHE</p><p class="empty-sub">Cree ton premier !</p></div>
+    </div>
+  </main>
+</div>
+
+<!-- ═══ PAGE CREATION LABYRINTHE ═══ -->
+<div id="page-create" class="page hidden">
+  <header class="topbar">
+    <button class="btn-back" id="btn-create-back">RETOUR</button>
+    <span class="topbar-logo">NOUVEAU LABYRINTHE</span>
+    <div class="topbar-nav">
+      <button class="btn-icon" id="btn-solve" disabled>RESOUDRE</button>
+      <button class="btn-icon" id="btn-save" disabled>SAUVEGARDER</button>
+    </div>
+  </header>
+  <div class="controls-bar">
+    <div class="control-block">
+      <span class="ctrl-label">NOM</span>
+      <input type="text" id="laby-name" placeholder="MON_LABYRINTHE" value="MON_LABYRINTHE" style="font-family:var(--font);font-size:.7rem;padding:.5rem;background:var(--bg-3);color:var(--white);border:1px solid var(--grey-2);width:200px;">
+    </div>
+    <div class="control-block">
+      <span class="ctrl-label">TAILLE</span>
+      <div class="size-selector">
+        <button class="size-btn" data-size="small">S</button>
+        <button class="size-btn active" data-size="medium">M</button>
+        <button class="size-btn" data-size="large">L</button>
+      </div>
+    </div>
+    <div class="control-block">
+      <span class="ctrl-label">DIFFICULTE <span class="ctrl-value" id="diff-display">5</span>/10</span>
+      <input type="range" id="laby-difficulty" min="1" max="10" value="5">
+    </div>
+    <button class="btn-primary" id="btn-generate">GENERER</button>
+  </div>
+  <div class="canvas-zone">
+    <div class="canvas-frame">
+      <canvas id="maze-canvas" width="500" height="500"></canvas>
+    </div>
+    <div class="legend">
+      <span class="legend-entry">ENTREE</span>
+      <span class="legend-exit">SORTIE</span>
+      <span class="legend-path">CHEMIN</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE VIEW LABYRINTHE ═══ -->
+<div id="page-view" class="page hidden">
+  <header class="topbar">
+    <button class="btn-back" id="btn-view-back">RETOUR</button>
+    <span id="view-title" class="topbar-logo"></span>
+    <div class="topbar-nav">
+      <button class="btn-icon" id="btn-view-solve">RESOUDRE</button>
+      <button class="btn-icon" id="btn-view-edit">MODIFIER</button>
+      <button class="btn-icon danger" id="btn-view-delete">SUPPRIMER</button>
+    </div>
+  </header>
+  <div class="canvas-zone">
+    <div class="canvas-frame">
+      <canvas id="view-canvas" width="500" height="500"></canvas>
+    </div>
+    <div class="view-info">
+      <span id="view-size"></span>
+      <span id="view-difficulty"></span>
+      <span id="view-date"></span>
+    </div>
+    <div class="legend">
+      <span class="legend-entry">ENTREE</span>
+      <span class="legend-exit">SORTIE</span>
+      <span class="legend-path">CHEMIN</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE ADMIN ═══ -->
+<div id="page-admin" class="page hidden">
+  <header class="topbar">
+    <button class="btn-back" id="btn-admin-back">RETOUR</button>
+    <span class="topbar-logo" style="color:var(--red);text-shadow:var(--glow-r);">ADMIN PANEL</span>
+    <div></div>
+  </header>
+  <main class="admin-main">
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num" id="admin-stat-users">0</div>
+        <div class="stat-lbl">UTILISATEURS</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="admin-stat-labys">0</div>
+        <div class="stat-lbl">LABYRINTHES</div>
+      </div>
+    </div>
+
+    <div class="admin-tabs">
+      <button class="admin-tab active" data-tab="admin-users">UTILISATEURS</button>
+      <button class="admin-tab" data-tab="admin-labys">LABYRINTHES</button>
+    </div>
+
+    <div id="tab-admin-users" class="tab-content">
+      <div class="section-header" style="margin-bottom:1rem;">
+        <h2 class="section-title">GESTION DES UTILISATEURS</h2>
+        <button class="btn-primary small" id="btn-admin-add-user">+ AJOUTER</button>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table" id="users-table">
+          <thead><tr><th>ID</th><th>PSEUDO</th><th>EMAIL</th><th>ROLE</th><th>DATE</th><th>ACTIONS</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="tab-admin-labys" class="tab-content hidden">
+      <h2 class="section-title" style="margin-bottom:1rem;">TOUS LES LABYRINTHES</h2>
+      <div class="table-wrap">
+        <table class="data-table" id="admin-labys-table">
+          <thead><tr><th>ID</th><th>NOM</th><th>CREATEUR</th><th>TAILLE</th><th>DIFF.</th><th>DATE</th><th>ACTIONS</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ═══ MODALE ═══ -->
+<div id="modal-overlay" class="modal-backdrop hidden">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2 id="modal-title" class="modal-title"></h2>
+      <button id="modal-close" class="btn-icon">X</button>
+    </div>
+    <div id="modal-body" class="modal-body"></div>
+    <div class="modal-footer">
+      <button id="modal-cancel" class="btn-ghost">ANNULER</button>
+      <button id="modal-confirm" class="btn-primary small">CONFIRMER</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast hidden"></div>
+
+<script src="app.js"></script>
+
+<!-- BOOT ANIMATION + CURSEUR -->
+<script>
+  // Curseur personnalise
+  const cur = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => { cur.style.left = e.clientX+'px'; cur.style.top = e.clientY+'px'; });
+  document.querySelectorAll('button,input,select,a').forEach(el => {
+    el.addEventListener('mouseenter', () => cur.classList.add('hover'));
+    el.addEventListener('mouseleave', () => cur.classList.remove('hover'));
+  });
+
+  // Boot screen : texte tape ligne par ligne
+  const lines = [
+    ['b1', '> INITIALISATION DU SYSTEME...', 0],
+    ['b2', '> CHARGEMENT DES MODULES...',    700],
+    ['b3', '> CONNEXION A LA MATRICE...',    1400],
+    ['b4', '> ACCES AUTORISE.',              2100],
+  ];
+
+  function typeText(id, txt, speed) {
+    const el = document.getElementById(id);
+    let i = 0;
+    const t = setInterval(() => { el.textContent += txt[i++]; if(i >= txt.length) clearInterval(t); }, speed || 35);
+  }
+
+  lines.forEach(([id, txt, delay]) => setTimeout(() => typeText(id, txt), delay));
+
+  // Barre de progression
+  setTimeout(() => {
+    document.getElementById('bbar-wrap').hidden = false;
+    const bar = document.getElementById('bbar');
+    let w = 0;
+    const t = setInterval(() => {
+      bar.style.width = (w += 2) + '%';
+      if (w >= 100) { clearInterval(t); setTimeout(endBoot, 300); }
+    }, 16);
+  }, 2700);
+
+  function endBoot() {
+    const boot = document.getElementById('boot');
+    boot.style.opacity = '0';
+    setTimeout(() => {
+      boot.style.display = 'none';
+      // Animer le titre glitch lettre par lettre
+      const el = document.querySelector('.glitch-title');
+      if (el) {
+        const txt = 'LABYRINTHE';
+        el.textContent = '';
+        el.removeAttribute('data-text');
+        let i = 0;
+        const t = setInterval(() => {
+          el.textContent += txt[i++];
+          if (i >= txt.length) { clearInterval(t); el.setAttribute('data-text', txt); }
+        }, 80);
+      }
+    }, 500);
+  }
+</script>
+
+</body>
+</html>
